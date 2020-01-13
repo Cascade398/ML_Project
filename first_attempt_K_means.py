@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jan 10 17:43:45 2020
+Spyder Editor
 
-@author: Amrit Raj
+This is a temporary script file.
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,13 +14,35 @@ x=dataset.iloc[:, 1:14].values
 print(x)
 
 #Getting rid of categorical data of region...
+
+#Region
 category_Hot_Encoded=pd.get_dummies(x[:, 4])
 x=np.append(x, category_Hot_Encoded, axis=1)
 print(x)
-x=np.delete(x, 4, 1)# This removes the region coulumm which in turn would be replaced by category_Hot_Encoded
-#x=pd.DataFrame(x) to view it as  a data frame
+x=np.delete(x, 4, 1)
 
-"""
+#Gender
+category_Hot_Encoded=pd.get_dummies(x[:, 1])
+x=np.append(x, category_Hot_Encoded, axis=1)
+print(x)
+x=np.delete(x, 1, 1)
+x=np.delete(x, 15, 1)
+
+#Goals
+category_Hot_Encoded=pd.get_dummies(x[:, 4])
+x=np.append(x, category_Hot_Encoded, axis=1)
+print(x)
+x=np.delete(x, 4, 1)
+
+#Seats
+category_Hot_Encoded=pd.get_dummies(x[:, 7])
+x=np.append(x, category_Hot_Encoded, axis=1)
+print(x)
+x=np.delete(x, 7, 1)
+# This removes the region coulumm which in turn would be replaced by category_Hot_Encoded
+x=pd.DataFrame(x)
+
+
 #Making the data polynomial...
 	from sklearn.preprocessing import PolynomialFeatures
 	poly_reg=PolynomialFeatures(degree=i)
