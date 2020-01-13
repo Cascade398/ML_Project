@@ -15,8 +15,10 @@ print(x)
 
 #Getting rid of categorical data of region...
 category_Hot_Encoded=pd.get_dummies(x[:, 4])
-x=x.drop("Region", axis=1)# This removes the region coulumm which in turn would be replaced by category_Hot_Encoded
-x=pd.concat(x, category_Hot_Encoded)
+x=np.append(x, category_Hot_Encoded, axis=1)
+print(x)
+x=np.delete(x, 4, 1)# This removes the region coulumm which in turn would be replaced by category_Hot_Encoded
+#x=pd.DataFrame(x) to view it as  a data frame
 
 """
 #Making the data polynomial...
