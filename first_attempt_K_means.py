@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jan 10 17:43:45 2020
+Spyder Editor
 
-@author: Amrit Raj
+This is a temporary script file.
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,30 +14,55 @@ x=dataset.iloc[:, 1:14].values
 print(x)
 
 #Getting rid of categorical data of region...
+
+#Region
 category_Hot_Encoded=pd.get_dummies(x[:, 4])
 x=np.append(x, category_Hot_Encoded, axis=1)
 print(x)
-x=np.delete(x, 4, 1)# This removes the region coulumm which in turn would be replaced by category_Hot_Encoded
-#x=pd.DataFrame(x) to view it as  a data frame
-#Getting rid of categorical data of Gender...
+x=np.delete(x, 4, 1)
+
+#Gender
 category_Hot_Encoded=pd.get_dummies(x[:, 1])
 x=np.append(x, category_Hot_Encoded, axis=1)
 print(x)
-x=np.delete(x, 1, 1)# This removes the region coulumm which in turn would be replaced by category_Hot_Encoded
-#x=pd.DataFrame(x) to view it as  a data frame
-#Now we remove the female categorical data to avoid the categorical data trap
+x=np.delete(x, 1, 1)
 x=np.delete(x, 15, 1)
-#x=pd.DataFrame(x)...just to visualize#Getting rid of categorical data of Gender...
-#Getting rid of categorical data of Goals...
+
+#Goals
 category_Hot_Encoded=pd.get_dummies(x[:, 4])
 x=np.append(x, category_Hot_Encoded, axis=1)
 print(x)
-x=np.delete(x, 4, 1)# This removes the region coulumm which in turn would be replaced by category_Hot_Encoded
-#Getting rid of categorical data of Seats...
+x=np.delete(x, 4, 1)
+
+#Seats
 category_Hot_Encoded=pd.get_dummies(x[:, 7])
 x=np.append(x, category_Hot_Encoded, axis=1)
 print(x)
-x=np.delete(x, 7, 1)# This removes the region coulumm which in turn would be replaced by category_Hot_Encoded
+x=np.delete(x, 7, 1)
+x=pd.DataFrame(x)
+
+#Hobbies
+clist = ['Game','Musical','Gym','Others']
+for i in range(0, 328):
+    list1 = x[3][i].split(', ')
+    list2 = [0, 0, 0, 0]
+    
+    for j in range(0, 4):
+        if clist[j] in list1:
+            list2[j] = 1 
+    x[3][i] = list2
+    
+    
+tags = x[3].apply(pd.Series)
+tags = tags.rename(columns = lambda a : 'tag_' + str(a))
+
+x = pd.concat([x[:], tags[:]], axis=1)
+x=pd.DataFrame(x)
+x.rename(columns = {'tag_0':'Game'}, inplace = True)
+x.rename(columns = {'tag_1':'Musical'}, inplace = True)
+x.rename(columns = {'tag_2':'Gym'}, inplace = True)
+x.rename(columns = {'tag_3':'Others'}, inplace = True)
+
 
 """
 #Making the data polynomial...
