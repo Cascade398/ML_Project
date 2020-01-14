@@ -8,12 +8,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-dataset=pd.read_excel('Project_Data.xlsx')
+dataset=pd.read_excel('data.xlsx')
 #check=dataset.iloc[:, 13].values
 x=dataset.iloc[:, 1:14].values
 print(x)
 
 #Getting rid of categorical data of region...
+ 
 
 #Region
 category_Hot_Encoded=pd.get_dummies(x[:, 4])
@@ -41,9 +42,12 @@ print(x)
 x=np.delete(x, 7, 1)
 x=pd.DataFrame(x)
 
+
+
+
 #Hobbies
 clist = ['Game','Musical','Gym','Others']
-for i in range(0, 328):
+for i in range(0, 320):
     list1 = x[3][i].split(', ')
     list2 = [0, 0, 0, 0]
     
@@ -62,6 +66,63 @@ x.rename(columns = {'tag_0':'Game'}, inplace = True)
 x.rename(columns = {'tag_1':'Musical'}, inplace = True)
 x.rename(columns = {'tag_2':'Gym'}, inplace = True)
 x.rename(columns = {'tag_3':'Others'}, inplace = True)
+
+
+#Nasha
+clist = ['A','G','C','X','N']
+for i in range(0, 320):
+    list1 = x[6][i].split(', ')
+    list2 = [0, 0, 0, 0, 0]
+    
+    for j in range(0, 5):
+        if clist[j] in list1:
+            list2[j] = 1 
+    x[6][i] = list2
+    
+    
+tags = x[6].apply(pd.Series)
+tags = tags.rename(columns = lambda a : 'tag_' + str(a))
+
+x = pd.concat([x[:], tags[:]], axis=1)
+x=pd.DataFrame(x)
+x.rename(columns = {'tag_0':'A'}, inplace = True)
+x.rename(columns = {'tag_1':'G'}, inplace = True)
+x.rename(columns = {'tag_2':'C'}, inplace = True)
+x.rename(columns = {'tag_3':'X'}, inplace = True)
+x.rename(columns = {'tag_4':'N'}, inplace = True)
+
+
+#Music taste
+clist = ['M1','M2','M3','M4','M5','M6','M7','M8','Others']
+for i in range(0, 320):
+    list1 = x[8][i].split(', ')
+    list2 = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    for j in range(0, 9):
+        if clist[j] in list1:
+            list2[j] = 1
+            
+    x[8][i] = list2
+    
+    
+tags = x[8].apply(pd.Series)
+tags = tags.rename(columns = lambda a : 'tag_' + str(a))
+
+x = pd.concat([x[:], tags[:]], axis=1)
+x=pd.DataFrame(x)
+
+x.rename(columns = {'tag_0':'M1'}, inplace = True)
+x.rename(columns = {'tag_1':'M2'}, inplace = True)
+x.rename(columns = {'tag_2':'M3'}, inplace = True)
+x.rename(columns = {'tag_3':'M4'}, inplace = True)
+x.rename(columns = {'tag_4':'M5'}, inplace = True)
+x.rename(columns = {'tag_5':'M6'}, inplace = True)
+x.rename(columns = {'tag_6':'M7'}, inplace = True)
+x.rename(columns = {'tag_7':'M8'}, inplace = True)
+x.rename(columns = {'tag_8':'Others'}, inplace = True)
+
+
+#SchID
+x=pd.DataFrame(x)
 
 
 """
