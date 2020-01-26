@@ -1,7 +1,7 @@
+
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 10 17:43:45 2020
-
 @author: Amrit Raj
 """
 import numpy as np
@@ -83,7 +83,30 @@ x.rename(columns = {'tag_3':'Others'}, inplace = True)
 
 #Delete column number 3(Hobbies) from the x...
 x=x.drop(labels=3, axis=1)# This removes the region coulumm which in turn would be replaced by category_Hot_Encoded
-x=x.drop(labels=5, axis=1)# This removes the friends coulumm
+#x=x.drop(labels=5, axis=1)# This removes the friends coulumm
+
+#Nasha
+clist = ['A','G','C','X','N']
+for i in range(0, 325):
+    list1 = x[6][i].split(', ')
+    list2 = [0, 0, 0, 0, 0]
+    for j in range(0, 5):
+        if clist[j] in list1:
+            list2[j] = 1    
+    x[6][i] = list2
+ 
+tags = x[6].apply(pd.Series)
+tags = tags.rename(columns = lambda a : 'tag_' + str(a))
+
+x = pd.concat([x[:], tags[:]], axis=1)
+x=pd.DataFrame(x)
+
+x.rename(columns = {'tag_0':'A'}, inplace = True)
+x.rename(columns = {'tag_1':'G'}, inplace = True)
+x.rename(columns = {'tag_2':'C'}, inplace = True)
+x.rename(columns = {'tag_3':'X'}, inplace = True)
+x.rename(columns = {'tag_4':'N'}, inplace = True)
+x=x.drop(labels=6, axis=1)#Dropping Nsha column
 
 #Music taste
 clist = ['M1','M2','M3','M4','M5','M6','M7','M8','Others']
@@ -113,11 +136,8 @@ x.rename(columns = {'tag_6':'M7'}, inplace = True)
 x.rename(columns = {'tag_7':'M8'}, inplace = True)
 x.rename(columns = {'tag_8':'Others'}, inplace = True)
 x=x.drop(labels=8, axis=1)# This removes the Music coulumm
-
-#This drop is only temporary and needs to be removed as and when nasha is implemented...
-x=x.drop(labels=6, axis=1)# This removes the Nasha coulumm
-x=x.drop(labels=2, axis=1)# This removes the Nasha coulumm
-#.....
+x=x.drop(labels=5, axis=1)# This removes the Friends coulumm
+x=x.drop(labels=2, axis=1)# This removes the Music coulumm
 
 
 
@@ -128,11 +148,14 @@ for i in range(1, 11):
 	kmeans=KMeans(n_clusters = i , init = 'k-means++', max_iter=200, n_init=10, random_state=0)
 	kmeans.fit(x)
 	wcss.append(kmeans.inertia_)
-plt.plot(range(1, 11), wcss)
+    
 plt.title('Elbow method to find the best value of k')
+plt.plot(range(1, 11), wcss)
 plt.xlabel('Number of clusters')
 plt.ylabel('WCSS')
 plt.show()
+
+
 
 
 #found--k=4.....
@@ -146,15 +169,28 @@ x=x.values
 plt.scatter(x[y_kmeans==0, 0]%100, x[y_kmeans==0, 1], s=10, c='red')
 plt.scatter(x[y_kmeans==1, 0]%100, x[y_kmeans==1, 1], s=10, c='blue')
 plt.scatter(x[y_kmeans==2, 0]%100, x[y_kmeans==2, 1], s=10, c='green')
-plt.scatter(x[y_kmeans==3, 0]%100, x[y_kmeans==3, 1], s=10, c='cyan')
+plt.scatter(x[y_kmeans==3, 0]%100, x[y_kmeans==2, 1], s=10, c='yellow')
 plt.title('Group(Cluster) of friends based on K-Means')
 plt.xlabel('Scholar_ID mod 100---->')
 plt.ylabel('Spending Score----->')
 plt.legend()
-plt.show()		                        
+plt.show()               
+c0=c1=c2=c3=c4=0
+
+for i in y_kmeans:
+    if(i==1):
+        c1+=1
+    elif(i==2):
+        c2+=1
+    elif(i==3):
+        c3+=1
+    elif(i==0):
+        c0+=1
 
 
+x=pd.DataFrame(x)
 """
+
 #Visualization.......
 plt.scatter(x[y_kmeans==0, 0], x[y_kmeans==0, 1], s=75, c='red', label='cluster1')
 plt.scatter(x[y_kmeans==1, 0], x[y_kmeans==1, 1], s=75, c='blue', label='cluster2')
@@ -165,47 +201,14 @@ plt.xlabel('Scholar_ID---->')
 plt.ylabel('Spending Score----->')
 plt.legend()
 plt.show()
-
-
-
-
-
-#Nasha
-clist = ['A','G','C','X','N']
-for i in range(0, 328):
-    list1 = x[4][i].split(', ')
-    list2 = [0, 0, 0, 0, 0]
-    
-    for j in range(0, 5):
-        if clist[j] in list1:
-            list2[j] = 1 
-    x[6][i] = list2
-    
-    
-tags = x[4].apply(pd.Series)
-tags = tags.rename(columns = lambda a : 'tag_' + str(a))
-
-x = pd.concat([x[:], tags[:]], axis=1)
-x=pd.DataFrame(x)
-x.rename(columns = {'tag_0':'A'}, inplace = True)
-x.rename(columns = {'tag_1':'G'}, inplace = True)
-x.rename(columns = {'tag_2':'C'}, inplace = True)
-x.rename(columns = {'tag_3':'X'}, inplace = True)
-x.rename(columns = {'tag_4':'N'}, inplace = True)
 """
-
 """
 #Making the data polynomial...
 	from sklearn.preprocessing import PolynomialFeatures
 	poly_reg=PolynomialFeatures(degree=i)
 	x_poly=poly_reg.fit_transform(x)
-"""
 
-
-
-"""
-
-#for i in range(5):
+for i in range(5):
 	
 	#Making the data polynomial...
 	from sklearn.preprocessing import PolynomialFeatures
@@ -247,8 +250,5 @@ x.rename(columns = {'tag_4':'N'}, inplace = True)
 	plt.xlabel('AH--->')
 	plt.ylabel('RH--->')
 	plt.show()
-	
-
-
 
 """
